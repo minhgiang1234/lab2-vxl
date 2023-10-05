@@ -53,6 +53,7 @@ static void MX_TIM2_Init(void);
 /* USER CODE BEGIN PFP */
 void display7SEG(int num);
 void update7SEG (int index);
+void updateClockBuffer();
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -65,6 +66,7 @@ int time_flag_dot = 0;
 const int MAX_LED = 4;
 int index_led = 0;
 int led_buffer [4] = {1, 2, 3, 4};
+int hour = 15, minute = 8, second = 50;
 
 /* USER CODE END 0 */
 
@@ -101,6 +103,7 @@ int main(void)
 
   enum DotState {OFF = 0, ON = 1};
   enum DotState dot_status = OFF;
+
   HAL_TIM_Base_Start_IT(&htim2);
   /* USER CODE END 2 */
 
@@ -108,6 +111,21 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+	  second ++;
+
+	  if ( second >= 60) {
+		  second = 0;
+		  minute ++;
+	  }
+	  if( minute >= 60) {
+		   minute = 0;
+		   hour ++;
+	   }
+	   if( hour >=24){
+		   hour = 0;
+	   }
+	   updateClockBuffer ();
+
 	  if (time_flag == 1) {
 		  update7SEG(index_led++);
 		  time_flag = 0;
@@ -121,7 +139,7 @@ int main(void)
 
 	  		  if (time_flag_dot == 1){
 	  			  time_flag_dot = 0;
-	  			  counter_dot = 100;
+	  			  counter_dot = 50;
 	  			  dot_status = ON;
 	  		  }
 		  break;
@@ -131,11 +149,13 @@ int main(void)
 
 	  		  if (time_flag_dot == 1){
 	  			  time_flag_dot = 0;
-	  			  counter_dot = 100;
+	  			  counter_dot = 50;
 	  			  dot_status = OFF;
 	  		  }
 		  break;
 	  }
+
+	  HAL_Delay (1000);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -335,6 +355,14 @@ void display7SEG(int num){
 	int number_in_bit[10] ={0x40, 0x79, 0x24, 0x30, 0x19, 0x12, 0x02, 0x78, 0x00, 0x10};
 	// write to ODR register to change sate all pin in port B
 	GPIOB->ODR = number_in_bit[num];
+}
+
+void updateClockBuffer(){
+//	led_buffer [4] = {1, 2, 3, 4};
+	led_buffer[0] = hour / 10;
+	led_buffer[1] = hour % 10;
+	led_buffer[2] = minute / 10;
+	led_buffer[3] = minute % 10;
 }
 /* USER CODE END 4 */
 
