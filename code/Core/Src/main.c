@@ -54,19 +54,25 @@ static void MX_TIM2_Init(void);
 void display7SEG(int num);
 void update7SEG (int index);
 void updateClockBuffer();
+void setTimer(int duration);
+void TimerRun();
+void setTimerDot(int duration);
+void TimerRunDot();
+
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-int time_flag = 1;
+int time_flag = 0;
 int counter = 100;
-int counter_dot = 100;
+int counter_dot = 50;
 int time_flag_dot = 0;
 
 const int MAX_LED = 4;
 int index_led = 0;
 int led_buffer [4] = {1, 2, 3, 4};
 int hour = 15, minute = 8, second = 50;
+int TIMER_CYCLE = 10;
 
 /* USER CODE END 0 */
 
@@ -105,32 +111,35 @@ int main(void)
   enum DotState dot_status = OFF;
 
   HAL_TIM_Base_Start_IT(&htim2);
+
+  setTimer(1000);
+  setTimerDot(500);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  second ++;
-
-	  if ( second >= 60) {
-		  second = 0;
-		  minute ++;
-	  }
-	  if( minute >= 60) {
-		   minute = 0;
-		   hour ++;
-	   }
-	   if( hour >=24){
-		   hour = 0;
-	   }
-	   updateClockBuffer ();
 
 	  if (time_flag == 1) {
 		  update7SEG(index_led++);
-		  time_flag = 0;
+		  second ++;
+		  if ( second >= 60) {
+			  second = 0;
+			  minute ++;
+		  }
+		  if( minute >= 60) {
+			   minute = 0;
+			   hour ++;
+		   }
+		   if( hour >=24){
+			   hour = 0;
+		   }
+		  updateClockBuffer();
+
 		  if (index_led > 3) index_led = 0;
-		  counter = 100;
+		  setTimer(1000);
+
 	  }
 
 	  switch (dot_status){
@@ -138,8 +147,7 @@ int main(void)
 	  		  HAL_GPIO_WritePin(DOT_GPIO_Port, DOT_Pin, GPIO_PIN_SET);
 
 	  		  if (time_flag_dot == 1){
-	  			  time_flag_dot = 0;
-	  			  counter_dot = 50;
+	  			  setTimerDot(500);
 	  			  dot_status = ON;
 	  		  }
 		  break;
@@ -148,14 +156,12 @@ int main(void)
 	  		  HAL_GPIO_WritePin(DOT_GPIO_Port, DOT_Pin, GPIO_PIN_RESET);
 
 	  		  if (time_flag_dot == 1){
-	  			  time_flag_dot = 0;
-	  			  counter_dot = 50;
+	  			  setTimerDot(500);
 	  			  dot_status = OFF;
 	  		  }
 		  break;
 	  }
 
-	  HAL_Delay (1000);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -286,16 +292,8 @@ static void MX_GPIO_Init(void)
 
 /* USER CODE BEGIN 4 */
 void HAL_TIM_PeriodElapsedCallback ( TIM_HandleTypeDef * htim ){
-	counter--;
-	counter_dot --;
-
-	if (counter <= 0){
-		time_flag = 1;
-	}
-
-	if (counter_dot <= 0){
-		time_flag_dot = 1;
-	}
+	TimerRun();
+	TimerRunDot();
 }
 
 void update7SEG (int index){
@@ -363,6 +361,28 @@ void updateClockBuffer(){
 	led_buffer[1] = hour % 10;
 	led_buffer[2] = minute / 10;
 	led_buffer[3] = minute % 10;
+}
+
+void setTimer(int duration){
+	counter = duration / TIMER_CYCLE;
+	time_flag = 0;
+}
+void TimerRun(){
+	if (counter > 0) counter--;
+	if (counter <= 0) {
+		time_flag = 1;
+	}
+}
+
+void setTimerDot(int duration){
+	counter_dot = duration / TIMER_CYCLE;
+	time_flag_dot = 0;
+}
+void TimerRunDot(){
+	if (counter_dot > 0) counter_dot--;
+	if (counter_dot <= 0) {
+		time_flag_dot = 1;
+	}
 }
 /* USER CODE END 4 */
 
