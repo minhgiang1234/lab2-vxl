@@ -148,9 +148,9 @@ int main(void)
  8000192:	4b1c      	ldr	r3, [pc, #112]	; (8000204 <main+0xb8>)
  8000194:	2200      	movs	r2, #0
  8000196:	601a      	str	r2, [r3, #0]
-		  counter = 50;
+		  counter = 100;
  8000198:	4b1b      	ldr	r3, [pc, #108]	; (8000208 <main+0xbc>)
- 800019a:	2232      	movs	r2, #50	; 0x32
+ 800019a:	2264      	movs	r2, #100	; 0x64
  800019c:	601a      	str	r2, [r3, #0]
 	  }
 

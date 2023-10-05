@@ -58,7 +58,7 @@ void update7SEG (int index);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 int time_flag = 1;
-int counter = 50;
+int counter = 100;
 int counter_dot = 100;
 int time_flag_dot = 0;
 
@@ -112,7 +112,7 @@ int main(void)
 		  update7SEG(index_led++);
 		  time_flag = 0;
 		  if (index_led > 3) index_led = 0;
-		  counter = 50;
+		  counter = 100;
 	  }
 
 	  switch (dot_status){
