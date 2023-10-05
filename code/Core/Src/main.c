@@ -58,6 +58,8 @@ void display7SEG(int num);
 /* USER CODE BEGIN 0 */
 int time_flag = 0;
 int counter = 50;
+int counter_dot = 100;
+int time_flag_dot = 0;
 /* USER CODE END 0 */
 
 /**
@@ -92,6 +94,8 @@ int main(void)
   /* USER CODE BEGIN 2 */
   enum SevenSegmentState {SEVEN_SEGMENT_0 = 0, SEVEN_SEGMENT_1 = 1, SEVEN_SEGMENT_2 = 2, SEVEN_SEGMENT_3 = 3};
   enum SevenSegmentState seven_segment_status = SEVEN_SEGMENT_0;
+  enum DotState {OFF = 0, ON = 1};
+  enum DotState dot_status = OFF;
   HAL_TIM_Base_Start_IT(&htim2);
   /* USER CODE END 2 */
 
@@ -99,6 +103,87 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+	  switch(seven_segment_status){
+	  	  case SEVEN_SEGMENT_0:
+	  		  HAL_GPIO_WritePin(EN0_GPIO_Port, EN0_Pin, GPIO_PIN_RESET);
+	  		  HAL_GPIO_WritePin(EN1_GPIO_Port, EN1_Pin, GPIO_PIN_SET);
+	  		  HAL_GPIO_WritePin(EN2_GPIO_Port, EN2_Pin, GPIO_PIN_SET);
+	  		  HAL_GPIO_WritePin(EN3_GPIO_Port, EN3_Pin, GPIO_PIN_SET);
+	  		  display7SEG(1);
+
+	  		  if (time_flag == 1){
+	  			  time_flag = 0;
+	  			  counter = 50;
+	  			  seven_segment_status = SEVEN_SEGMENT_1;
+	  		  }
+		  break;
+
+	  	  case SEVEN_SEGMENT_1:
+	  		  HAL_GPIO_WritePin(EN0_GPIO_Port, EN0_Pin, GPIO_PIN_SET);
+	  		  HAL_GPIO_WritePin(EN1_GPIO_Port, EN1_Pin, GPIO_PIN_RESET);
+	  		  HAL_GPIO_WritePin(EN2_GPIO_Port, EN2_Pin, GPIO_PIN_SET);
+	  		  HAL_GPIO_WritePin(EN3_GPIO_Port, EN3_Pin, GPIO_PIN_SET);
+	  		  display7SEG(2);
+
+	  		  if (time_flag == 1){
+	  			  time_flag = 0;
+	  			  counter = 50;
+	  			  seven_segment_status = SEVEN_SEGMENT_2;
+	  		  }
+		  break;
+
+	  	  case SEVEN_SEGMENT_2:
+	  		  HAL_GPIO_WritePin(EN0_GPIO_Port, EN0_Pin, GPIO_PIN_SET);
+	  		  HAL_GPIO_WritePin(EN1_GPIO_Port, EN1_Pin, GPIO_PIN_SET);
+	  		  HAL_GPIO_WritePin(EN2_GPIO_Port, EN2_Pin, GPIO_PIN_RESET);
+	  		  HAL_GPIO_WritePin(EN3_GPIO_Port, EN3_Pin, GPIO_PIN_SET);
+	  		  display7SEG(3);
+
+	  		  if (time_flag == 1){
+	  			  time_flag = 0;
+	  			  counter = 50;
+	  			  seven_segment_status = SEVEN_SEGMENT_3;
+	  		  }
+		  break;
+
+	  	  case SEVEN_SEGMENT_3:
+	  		  HAL_GPIO_WritePin(EN0_GPIO_Port, EN0_Pin, GPIO_PIN_SET);
+	  		  HAL_GPIO_WritePin(EN1_GPIO_Port, EN1_Pin, GPIO_PIN_SET);
+	  		  HAL_GPIO_WritePin(EN2_GPIO_Port, EN2_Pin, GPIO_PIN_SET);
+	  		  HAL_GPIO_WritePin(EN3_GPIO_Port, EN3_Pin, GPIO_PIN_RESET);
+	  		  display7SEG(0);
+
+	  		  if (time_flag == 1){
+	  			  time_flag = 0;
+	  			  counter = 50;
+	  			  seven_segment_status = SEVEN_SEGMENT_0;
+	  		  }
+		  break;
+	  }
+
+	  switch (dot_status){
+	  	  case OFF:
+	  		  HAL_GPIO_WritePin(DOT_GPIO_Port, DOT_Pin, GPIO_PIN_SET);
+
+	  		  if (time_flag_dot == 1){
+	  			  time_flag_dot = 0;
+	  			  counter_dot = 100;
+	  			  dot_status = ON;
+	  		  }
+		  break;
+
+	  	  case ON:
+	  		  HAL_GPIO_WritePin(DOT_GPIO_Port, DOT_Pin, GPIO_PIN_RESET);
+
+	  		  if (time_flag_dot == 1){
+	  			  time_flag_dot = 0;
+	  			  counter_dot = 100;
+	  			  dot_status = OFF;
+	  		  }
+		  break;
+	  }
+
+
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -230,8 +315,14 @@ static void MX_GPIO_Init(void)
 /* USER CODE BEGIN 4 */
 void HAL_TIM_PeriodElapsedCallback ( TIM_HandleTypeDef * htim ){
 	counter--;
+	counter_dot --;
+
 	if (counter <= 0){
 		time_flag = 1;
+	}
+
+	if (counter_dot <= 0){
+		time_flag_dot = 1;
 	}
 }
 
