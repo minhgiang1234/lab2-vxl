@@ -352,9 +352,9 @@ int main(void)
  80002ec:	4b13      	ldr	r3, [pc, #76]	; (800033c <main+0x1f0>)
  80002ee:	2200      	movs	r2, #0
  80002f0:	601a      	str	r2, [r3, #0]
-	  			  counter_dot = 100;
+	  			  counter_dot = 50;
  80002f2:	4b13      	ldr	r3, [pc, #76]	; (8000340 <main+0x1f4>)
- 80002f4:	2264      	movs	r2, #100	; 0x64
+ 80002f4:	2232      	movs	r2, #50	; 0x32
  80002f6:	601a      	str	r2, [r3, #0]
 	  			  dot_status = ON;
  80002f8:	2301      	movs	r3, #1
@@ -379,9 +379,9 @@ int main(void)
  8000310:	4b0a      	ldr	r3, [pc, #40]	; (800033c <main+0x1f0>)
  8000312:	2200      	movs	r2, #0
  8000314:	601a      	str	r2, [r3, #0]
-	  			  counter_dot = 100;
+	  			  counter_dot = 50;
  8000316:	4b0a      	ldr	r3, [pc, #40]	; (8000340 <main+0x1f4>)
- 8000318:	2264      	movs	r2, #100	; 0x64
+ 8000318:	2232      	movs	r2, #50	; 0x32
  800031a:	601a      	str	r2, [r3, #0]
 	  			  dot_status = OFF;
  800031c:	2300      	movs	r3, #0
