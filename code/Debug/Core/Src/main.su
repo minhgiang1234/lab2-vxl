@@ -18,5 +18,5 @@ main.c:481:6:setTimerMatrixAnimation	16	static
 main.c:485:6:TimerRundMatrixAnimation	4	static
 main.c:492:6:displayMatrix	24	static
 main.c:513:6:updateLedMatrix	16	static
-main.c:620:6:updateMatrixBuffer	16	static
+main.c:620:6:updateMatrixBuffer	4	static
 main.c:638:6:Error_Handler	4	static,ignoring_inline_asm

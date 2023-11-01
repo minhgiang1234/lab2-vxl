@@ -617,7 +617,7 @@ void updateLedMatrix(int index){
 
 }
 
-void updateMatrixBuffer(int animation){
+void updateMatrixBuffer(){
 		matrix_buffer[0] = matrix_buffer[1];
 		matrix_buffer[1] = matrix_buffer[2];
 		matrix_buffer[2] = matrix_buffer[3];
