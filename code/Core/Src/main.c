@@ -58,19 +58,23 @@ void setTimer(int duration);
 void TimerRun();
 void setTimerDot(int duration);
 void TimerRunDot();
+void setTimerClock(int duration);
+void TimerRunClock();
 
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 int time_flag = 0;
-int counter = 100;
+int counter = 25;
 int counter_dot = 50;
+int counter_clock = 100;
 int time_flag_dot = 0;
+int time_flag_clock = 100;
 
 const int MAX_LED = 4;
 int index_led = 0;
-int led_buffer [4] = {1, 2, 3, 4};
+int led_buffer [4] = {1, 5, 0, 8};
 int hour = 15, minute = 8, second = 50;
 int TIMER_CYCLE = 10;
 
@@ -112,7 +116,7 @@ int main(void)
 
   HAL_TIM_Base_Start_IT(&htim2);
 
-  setTimer(1000);
+  setTimer(250);
   setTimerDot(500);
   /* USER CODE END 2 */
 
@@ -122,8 +126,15 @@ int main(void)
   {
 
 	  if (time_flag == 1) {
+		  updateClockBuffer();
 		  update7SEG(index_led++);
-		  second ++;
+		  if (index_led > 3) index_led = 0;
+		  setTimer(250);
+
+	  }
+
+	  if (time_flag_clock == 1){
+		  second++;
 		  if ( second >= 60) {
 			  second = 0;
 			  minute ++;
@@ -136,10 +147,7 @@ int main(void)
 			   hour = 0;
 		   }
 		  updateClockBuffer();
-
-		  if (index_led > 3) index_led = 0;
-		  setTimer(1000);
-
+		  setTimerClock(1000);
 	  }
 
 	  switch (dot_status){
@@ -294,6 +302,7 @@ static void MX_GPIO_Init(void)
 void HAL_TIM_PeriodElapsedCallback ( TIM_HandleTypeDef * htim ){
 	TimerRun();
 	TimerRunDot();
+	TimerRunClock();
 }
 
 void update7SEG (int index){
@@ -382,6 +391,17 @@ void TimerRunDot(){
 	if (counter_dot > 0) counter_dot--;
 	if (counter_dot <= 0) {
 		time_flag_dot = 1;
+	}
+}
+
+void setTimerClock(int duration){
+	counter_clock = duration / TIMER_CYCLE;
+	time_flag_clock = 0;
+}
+void TimerRunClock(){
+	if (counter_clock > 0) counter_clock--;
+	if (counter_clock <= 0) {
+		time_flag_clock = 1;
 	}
 }
 /* USER CODE END 4 */
