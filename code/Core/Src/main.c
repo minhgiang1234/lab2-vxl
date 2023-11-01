@@ -59,7 +59,7 @@ void update7SEG (int index);
 /* USER CODE BEGIN 0 */
 int time_flag = 1;
 int counter = 50;
-int counter_dot = 100;
+int counter_dot = 50;
 int time_flag_dot = 0;
 
 const int MAX_LED = 4;
@@ -121,7 +121,7 @@ int main(void)
 
 	  		  if (time_flag_dot == 1){
 	  			  time_flag_dot = 0;
-	  			  counter_dot = 100;
+	  			  counter_dot = 50;
 	  			  dot_status = ON;
 	  		  }
 		  break;
@@ -131,7 +131,7 @@ int main(void)
 
 	  		  if (time_flag_dot == 1){
 	  			  time_flag_dot = 0;
-	  			  counter_dot = 100;
+	  			  counter_dot = 50;
 	  			  dot_status = OFF;
 	  		  }
 		  break;
