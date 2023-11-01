@@ -64,6 +64,9 @@ void TimerRunClock();
 void TimerRunLedMatrix();
 void setTimerLedMatrix(int duration);
 void updateLedMatrix();
+void updateMatrixBuffer();
+void setTimerMatrixAnimation(int duration);
+void TimerRundMatrixAnimation();
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -77,6 +80,8 @@ int counter_clock = 0;
 
 int counter_led_matrix = 0;
 int time_flag_led_matrix = 0;
+int counter_animation = 0;
+int time_flag_animation = 0;
 
 const int MAX_LED = 4;
 int index_led = 0;
@@ -87,6 +92,7 @@ int TIMER_CYCLE = 1;
 
 const int MAX_LED_MATRIX = 8;
 int index_led_matrix = 0;
+int animation_index = 0;
 /*
  * list display column to display in bit
  * 0 => 0b11111111 => 0xFF
@@ -142,6 +148,7 @@ int main(void)
   setTimerClock(1000);
   setTimerDot(500);
   setTimerLedMatrix(5);
+  setTimerMatrixAnimation(500);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -201,6 +208,11 @@ int main(void)
     	  updateLedMatrix(index_led_matrix++);
     	  if (index_led_matrix > 7) index_led_matrix = 0;
     	  setTimerLedMatrix(5);
+      }
+
+      if(time_flag_animation == 1){
+    	  updateMatrixBuffer();
+    	  setTimerMatrixAnimation(500);
       }
 
       /* USER CODE END WHILE */
@@ -466,6 +478,17 @@ void TimerRunLedMatrix(){
 	}
 }
 
+void setTimerMatrixAnimation(int duration){
+	counter_animation = duration / TIMER_CYCLE;
+	time_flag_animation = 0;
+}
+void TimerRundMatrixAnimation(){
+	if (counter_animation > 0) counter_animation--;
+	if (counter_animation <= 0) {
+		time_flag_animation = 1;
+	}
+}
+
 void displayMatrix(int num){
 	/*
 	 * list display column to display in bit
@@ -591,6 +614,19 @@ void updateLedMatrix(int index){
 		default:
 			break;
 	}
+
+}
+
+void updateMatrixBuffer(int animation){
+		matrix_buffer[0] = matrix_buffer[1];
+		matrix_buffer[1] = matrix_buffer[2];
+		matrix_buffer[2] = matrix_buffer[3];
+		matrix_buffer[3] = matrix_buffer[4];
+		matrix_buffer[4] = matrix_buffer[5];
+		matrix_buffer[5] = matrix_buffer[6];
+		matrix_buffer[6] = matrix_buffer[7];
+		matrix_buffer[7] = matrix_buffer[0];
+
 
 }
 /* USER CODE END 4 */
